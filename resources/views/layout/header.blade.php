@@ -176,7 +176,7 @@
                   <div class="dropdown-menu dropdown-menu-end profile-dropdown ">
 
                       <!-- item-->
-                      <a class='dropdown-item notify-item' href='{{ Str::slug(auth()->user()->company) }}/profile'>
+                      <a class='dropdown-item notify-item' href='/{{ auth()->user()->phone }}/profile'>
                           <i class="mdi mdi-account-circle-outline fs-16 align-middle"></i>
                           <span>Tài khoản của tôi</span>
                       </a>
@@ -191,7 +191,7 @@
                       </a>
 
                       <form id="logout-form"
-                          action="{{ route('auth.logout', ['company' => Str::slug(auth()->user()->company)]) }}"
+                          action="{{ route('auth.logout', ['phone' => auth()->user()->phone]) }}"
                           method="POST" class="d-none">
                           @csrf
                       </form>

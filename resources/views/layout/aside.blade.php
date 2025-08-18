@@ -6,10 +6,10 @@
          <div class="logo-box">
              <a class='logo logo-dark' href='index.html'>
                  <span class="logo-sm">
-                     <img src="{{ showImage(auth()->user()->logo) }}" alt="" height="22">
+                     <img src="{{ auth()->user()->logo }}" alt="" height="22">
                  </span>
                  <span class="logo-lg">
-                     <img src="{{ showImage(auth()->user()->logo) }}" alt="" height="24">
+                     <img src="{{ auth()->user()->logo }}" alt="" height="24">
                  </span>
              </a>
          </div>
@@ -19,7 +19,7 @@
              <li class="menu-title">Menu</li>
 
              <li>
-                 <a class='tp-link' href="/{{ Str::slug(auth()->user()->company) }}">
+                 <a class='tp-link' href="/{{ auth()->user()->phone }}">
                      <i data-feather="home"></i>
                      <span> Tổng quan </span>
                  </a>
@@ -27,15 +27,19 @@
 
              <li class="menu-title">Pages</li>
 
-             <li>
-                 <a class='tp-link' href='/{{ Str::slug(auth()->user()->company) }}/clients'>
-                     <i data-feather="users"></i>
-                     <span> Danh sách khách hàng </span>
-                 </a>
-             </li>
+             @if (!auth()->user()->isAdmin())
+                 <li>
+                     <a class='tp-link' href='/{{ auth()->user()->phone }}/clients'>
+                         <i data-feather="users"></i>
+                         <span> Danh sách khách hàng </span>
+                     </a>
+                 </li>
+             @endif
+
 
              <li>
-                 <a class="tp-link" href="{{ route('bills.index', ['company' => Str::slug(auth()->user()->company)]) }}">
+                 <a class="tp-link"
+                     href="{{ route('bills.index', ['phone' => auth()->user()->phone]) }}">
                      <i data-feather="shopping-cart"></i>
                      <span>Xác nhận mua hàng</span>
                  </a>

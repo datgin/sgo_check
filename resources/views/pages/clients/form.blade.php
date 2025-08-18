@@ -66,8 +66,7 @@
                     </x-card>
 
                     <x-card title="Favicon">
-                        <x-media name="favicon"
-                            selected="{{ optional($user)->favicon }}" />
+                        <x-media name="favicon" selected="{{ optional($user)->favicon }}" />
                     </x-card>
                 </div>
             </div>
@@ -92,7 +91,7 @@
                 return;
             }
 
-            window.location.href = "/{{ Str::slug(auth()->user()->company) }}/clients";
+            window.location.href = "/{{ auth()->user()->phone }}/clients";
         });
     </script>
 @endpush

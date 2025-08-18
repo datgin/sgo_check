@@ -44,7 +44,7 @@ Route::middleware(['auth'])->group(function () {
         }
     );
 
-    Route::prefix('{company}')->middleware(['check.company'])->group(function () {
+    Route::prefix('{phone}')->middleware(['check.phone'])->group(function () {
         Route::get('/', [DashboardController::class,  'dashboard'])->name('dashboard');
 
         Route::controller(AuthController::class)->group(function () {
@@ -78,5 +78,5 @@ Route::middleware(['auth'])->group(function () {
 });
 
 
-Route::get('{company}/certificate/{bill}', [BillController::class, 'certificate'])
-    ->name('bills.certificate')->middleware(['check.company']);
+Route::get('{phone}/certificate/{bill}', [BillController::class, 'certificate'])
+    ->name('bills.certificate')->middleware(['check.phone']);

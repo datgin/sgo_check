@@ -109,7 +109,7 @@
                     return;
                 }
 
-                window.location.href = "/{{ Str::slug(auth()->user()->company) }}/bills";
+                window.location.href = "/{{ auth()->user()->phone }}/bills";
             });
         });
     </script>

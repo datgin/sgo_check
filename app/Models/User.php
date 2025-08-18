@@ -6,7 +6,9 @@ namespace App\Models;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Foundation\Auth\User as Authenticatable;
 use Illuminate\Notifications\Notifiable;
+use Illuminate\Support\Facades\Hash;
 use Laravel\Sanctum\HasApiTokens;
+use Illuminate\Database\Eloquent\Casts\Attribute;
 
 class User extends Authenticatable
 {
@@ -56,12 +58,10 @@ class User extends Authenticatable
         return $this->role === 'admin';
     }
 
-    public static function boot()
+    protected function password(): Attribute
     {
-        parent::boot();
-
-        static::updating(function ($model) {
-            $model->password = bcrypt($model->password);
-        });
+        return Attribute::make(
+            set: fn($value) => !empty($value) ? Hash::make($value) : $this->password,
+        );
     }
 }

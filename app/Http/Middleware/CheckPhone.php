@@ -7,7 +7,7 @@ use Illuminate\Http\Request;
 use Illuminate\Support\Str;
 use Symfony\Component\HttpFoundation\Response;
 
-class CheckCompany
+class CheckPhone
 {
     /**
      * Handle an incoming request.
@@ -19,14 +19,11 @@ class CheckCompany
 
         $user = $request->user();
 
-        // Slug công ty trong DB
-        $company = Str::slug($user->company);
-
         // Lấy slug đầu tiên trên URL
         $currentSlug = $request->segment(1);
 
         // Nếu không có slug hoặc slug không khớp → 404
-        if (!$currentSlug || $currentSlug !== $company) {
+        if (!$currentSlug || $currentSlug !== $user->phone) {
             abort(404);
         }
 

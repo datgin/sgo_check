@@ -31,7 +31,7 @@ class AuthController extends Controller
 
                 $request->session()->regenerate();
 
-                $redirect = route('dashboard', ['company' => Str::slug($user->company)]);
+                $redirect = route('dashboard', ['phone' => $user->phone]);
 
                 return successResponse(message: 'Đăng nhập thành công', data: $redirect);
             }
@@ -62,7 +62,8 @@ class AuthController extends Controller
             return successResponse(
                 message: "Cập nhật thông tin thành công.",
                 code: Response::HTTP_OK,
-                isToastr: $request->input('submit_action') === 'save_exit'
+                isToastr: $request->input('submit_action') === 'save_exit',
+                data: $user
             );
         });
     }

@@ -3,7 +3,7 @@
         // Tạo token encode user ở đây hoặc controller truyền xuống
         $token = base64_encode(json_encode(auth()->user()));
         $url = route('bills.certificate', [
-            'company' => Str::slug(auth()->user()->company),
+            'phone' => auth()->user()->phone,
             'bill' => $row->id,
             'token' => $token,
         ]);

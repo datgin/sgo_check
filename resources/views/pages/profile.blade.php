@@ -62,10 +62,12 @@
 
             if (submitAction === 'save') {
                 datgin.success(res.message)
+                const newUrl = `/${res.data.phone}/profile`
+                window.history.pushState({}, '', newUrl)
                 return;
             }
 
-            window.location.href = "/{{ Str::slug($user->company) }}";
+            window.location.href = `/${res.data.phone}`;
         });
     </script>
 @endpush
