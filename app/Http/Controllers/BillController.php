@@ -106,12 +106,14 @@ class BillController extends Controller
                 'type' => 'local',
                 'file' => [
                     'name' => basename($f->file_path),
+                    'size' => Storage::size($f->file_path), // thêm size
                 ],
                 'metadata' => [
                     'id' => $f->id,
                 ],
             ],
         ])->values()->toArray();
+
 
         return view('pages.bills.form', compact('title', 'bill', 'oldFiles'));
     }

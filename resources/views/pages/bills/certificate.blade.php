@@ -99,6 +99,28 @@
             border-bottom: 1px solid #dee2e6;
             margin: 25px 0;
         }
+
+        .file-thumb {
+            width: 100%;
+            padding-top: 100%;
+            /* tạo khung vuông */
+            position: relative;
+            overflow: hidden;
+            border: 1px solid #dee2e6;
+            border-radius: 8px;
+            background: #f8f9fa;
+        }
+
+        .file-thumb img {
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            width: 100%;
+            height: 100%;
+            object-fit: contain;
+            /* giữ tỉ lệ, không cắt */
+            transform: translate(-50%, -50%);
+        }
     </style>
 </head>
 
@@ -122,11 +144,14 @@
                 </div>
                 <div class="col-12 col-md-8 text-center text-md-start">
                     <h5 class="mb-1">{{ $user->company }}</h5>
-                    <p class="mb-1">{{ $user->address }}</p>
-                    <p class="mb-1">Mã số thuế: {{ $user->tax_number }}</p>
-                    <p class="mb-1">Điện thoại: {{ $user->phone }}</p>
-                    <p class="mb-0">Email: {{ $user->email }}</p>
+                    <div class="text-start mt-2">
+                        <p class="mb-1">{{ $user->address }}</p>
+                        <p class="mb-1">Mã số thuế: {{ $user->tax_number }}</p>
+                        <p class="mb-1">Điện thoại: {{ $user->phone }}</p>
+                        <p class="mb-0">Email: {{ $user->email }}</p>
+                    </div>
                 </div>
+
             </div>
         </div>
 
@@ -180,26 +205,37 @@
                         </tbody>
                     </table>
                 </div>
-                <p><strong>Mô tả ngắn:</strong> {{ $bill->short_description }}</p>
             </div>
         </div>
+        <div class="section-divider"></div>
+
+        <p><strong>Mô tả sản phẩm:</strong> {{ $bill->short_description }}</p>
 
         <div class="section-divider"></div>
 
         <!-- File đính kèm -->
+        <!-- File đính kèm -->
         @if (!empty($bill->files))
             <div class="mb-4">
                 <h5>File đính kèm</h5>
-                <div class="list-group">
+                <div class="row g-3">
                     @foreach ($bill->files as $file)
-                        <a href="{{ Storage::url($file->file_path) }}" class="list-group-item list-group-item-action"
-                            target="_blank" download>
-                            <i class="fas fa-file-alt file-icon"></i> {{ basename($file->file_path) }}
-                        </a>
+                        <div class="col-6 col-sm-4 col-md-3 col-lg-2">
+                            <a href="{{ Storage::url($file->file_path) }}" target="_blank" download
+                                class="d-block text-center text-decoration-none">
+                                <div class="file-thumb">
+                                    <img src="{{ Storage::url($file->file_path) }}"
+                                        alt="{{ basename($file->file_path) }}">
+                                </div>
+                                {{-- <p class="mt-1 text-truncate" title="{{ basename($file->file_path) }}">
+                                    {{ basename($file->file_path) }}</p> --}}
+                            </a>
+                        </div>
                     @endforeach
                 </div>
             </div>
         @endif
+
 
         <div class="section-divider"></div>
 

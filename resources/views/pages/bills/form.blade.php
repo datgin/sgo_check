@@ -54,7 +54,8 @@
                             </div>
 
                             <div class="col-md-12">
-                                <input type="file" class="filepond" name="files[]" multiple />
+                                <input type="file" class="filepond" name="files[]" multiple
+                                    accept="image/png, image/jpeg, image/jpg">
                             </div>
                         </div>
                     </x-card>
@@ -127,6 +128,7 @@
             const pond = FilePond.create(document.querySelector('.filepond'), {
                 instantUpload: false,
                 storeAsFile: true,
+                acceptedFileTypes: ['image/jpeg', 'image/png', 'image/jpg'],
                 files: @json($oldFiles ?? [])
             })
 

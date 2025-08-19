@@ -33,7 +33,7 @@ class BillRequest extends FormRequest
             'short_description' => ['nullable', 'string'],
             'image'             => ['nullable', 'string'], // nếu lưu URL hoặc path
             'files'             => ['nullable', 'array'],
-            'files.*'           => ['nullable', !$id ? 'file' : '', 'max:2048'], // mỗi file <= 2MB
+            'files.*'           => ['nullable', !$id ? 'file' : '', 'mimes:jpg,jpeg,png', 'max:2048'], // mỗi file <= 2MB
         ];
     }
 }
