@@ -4,11 +4,13 @@ namespace App\Http\Controllers;
 
 use App\Http\Requests\BillRequest;
 use App\Models\Bill;
+use App\Models\BillFile;
 use App\Models\User;
 use App\Traits\DataTables;
 use App\Traits\QueryBuilder;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\Storage;
 use Symfony\Component\HttpFoundation\Response;
 
 class BillController extends Controller
@@ -70,7 +72,18 @@ class BillController extends Controller
 
             $credentials['user_id'] = Auth::id();
 
-            Bill::create($credentials);
+            $bill = Bill::create($credentials);
+
+            if ($request->hasFile('files')) {
+                foreach ($request->file('files') as $uploadedFile) {
+                    $filename = time() . '_' . $uploadedFile->getClientOriginalName();
+
+                    $path = $uploadedFile->storeAs('bill_files', $filename, 'public');
+
+                    $bill->files()->create(['file_path' => $path]);
+                }
+            }
+
 
             return successResponse(
                 message: "Tạo phiếu xác nhận thành công.",
@@ -84,23 +97,60 @@ class BillController extends Controller
     {
         $title = "Cập nhật phiếu xác nhận - {$bill->name}";
 
-        return view('pages.bills.form', compact('title', 'bill'));
+        $oldFiles = $bill->files->map(fn($f) => [
+            'source' => asset('storage/' . $f->file_path),
+            'options' => [
+                'type' => 'local',
+                'file' => [
+                    'name' => basename($f->file_path),
+                ],
+                'metadata' => [
+                    'id' => $f->id,
+                ],
+            ],
+        ])->values()->toArray();
+
+        return view('pages.bills.form', compact('title', 'bill', 'oldFiles'));
     }
+
     public function update($company, BillRequest $request, Bill $bill)
     {
         return transaction(function () use ($request, $bill) {
             $credentials = $request->validated();
 
             if (!empty($credentials['other_information'])) {
-                // Giải mã chuỗi JSON thành mảng
                 $tagsArray = json_decode($credentials['other_information'], true);
-
                 $tags = array_map(fn($tag) => $tag['value'], $tagsArray);
-
                 $credentials['other_information'] = $tags;
             }
 
             $bill->update($credentials);
+
+            // === Xử lý files ===
+            // Danh sách file id còn giữ lại (từ client gửi về)
+            $keepFileIds = $request->input('keep_files', []); // dạng array
+
+            // Xóa file cũ không còn giữ
+            $bill->files()
+                ->whereNotIn('id', $keepFileIds)
+                ->each(function ($file) {
+                    Storage::disk('public')->delete($file->file_path);
+                    $file->delete();
+                });
+
+            // Upload file mới
+            if ($request->hasFile('files')) {
+                foreach ($request->file('files') as $uploadedFile) {
+
+                    if (is_string($uploadedFile)) {
+                        continue;
+                    } else {
+                        $filename = time() . '_' . $uploadedFile->getClientOriginalName();
+                        $path = $uploadedFile->storeAs('bill_files', $filename, 'public');
+                        $bill->files()->create(['file_path' => $path]);
+                    }
+                }
+            }
 
             return successResponse(
                 message: "Cập nhật hóa đơn thành công.",
@@ -109,6 +159,7 @@ class BillController extends Controller
             );
         });
     }
+
 
     public function certificate($company, Bill $bill, Request $request)
     {
@@ -126,6 +177,8 @@ class BillController extends Controller
         if (!$decoded) {
             abort(403, 'Token sai định dạng');
         }
+
+        $bill->load(['files']);
 
         // Nếu bạn muốn lấy user trong DB dựa theo id
         $user = null;

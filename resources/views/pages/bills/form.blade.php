@@ -5,7 +5,7 @@
 
         <x-breadcrumb :items="[['label' => $title]]" />
 
-        <form id="myForm">
+        <form id="myForm" enctype="multipart/form-data">
             @csrf
 
             @if ($bill)
@@ -52,6 +52,10 @@
                                 <x-textarea label="Mô tả ngắn" name="short_description"
                                     value="{{ optional($bill)->short_description }}" />
                             </div>
+
+                            <div class="col-md-12">
+                                <input type="file" class="filepond" name="files[]" multiple />
+                            </div>
                         </div>
                     </x-card>
                 </div>
@@ -67,15 +71,23 @@
                     </x-card>
                 </div>
             </div>
+
+            @foreach ($bill->files ?? [] as $file)
+                <input type="hidden" name="keep_files[]" value="{{ $file->id }}" id="keep-file-{{ $file->id }}">
+            @endforeach
         </form>
 
     </div>
+
+
 
     <x-media-popup />
 @endsection
 
 @push('script')
     <script src="https://cdn.jsdelivr.net/npm/@yaireo/tagify"></script>
+    <script src="https://unpkg.com/filepond/dist/filepond.js"></script>
+
     <script>
         $(function() {
             var $input = $('#other_information');
@@ -111,11 +123,26 @@
 
                 window.location.href = "/{{ auth()->user()->phone }}/bills";
             });
+
+            const pond = FilePond.create(document.querySelector('.filepond'), {
+                instantUpload: false,
+                storeAsFile: true,
+                files: @json($oldFiles ?? [])
+            })
+
+            pond.on('removefile', (error, file) => {
+                if (file.getMetadata('id')) {
+                    // Nếu file cũ bị xóa thì remove khỏi hidden input
+                    let id = file.getMetadata('id');
+                    document.querySelector(`#keep-file-${id}`).remove();
+                }
+            });
         });
     </script>
 @endpush
 
 
 @push('style')
+    <link href="https://unpkg.com/filepond/dist/filepond.css" rel="stylesheet" />
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@yaireo/tagify/dist/tagify.css">
 @endpush

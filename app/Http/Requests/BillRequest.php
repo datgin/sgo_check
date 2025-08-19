@@ -21,15 +21,19 @@ class BillRequest extends FormRequest
      */
     public function rules(): array
     {
+        $id = $this->route('bill')->id ?? null;
+
         return [
             'name'              => ['required', 'string', 'max:255'],
             'origin'            => ['nullable', 'string', 'max:255'],
             'product_code'      => ['required', 'string', 'max:100'],
             'production_date'   => ['nullable', 'date'],
             'guarantee'         => ['nullable', 'string', 'max:255'],
-            'other_information' => ['nullable', 'string'], // Tagify trả về JSON string
+            'other_information' => ['nullable', 'string'], // Tagify JSON
             'short_description' => ['nullable', 'string'],
-            'image'             => ['nullable', 'string'], // nếu lưu path URL
+            'image'             => ['nullable', 'string'], // nếu lưu URL hoặc path
+            'files'             => ['nullable', 'array'],
+            'files.*'           => ['nullable', !$id ? 'file' : '', 'max:2048'], // mỗi file <= 2MB
         ];
     }
 }

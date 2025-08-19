@@ -25,4 +25,9 @@ class Bill extends Model
         'production_date'   => 'date',
         'other_information' => 'array',
     ];
+
+    public function files()
+    {
+        return $this->hasMany(BillFile::class);
+    }
 }
