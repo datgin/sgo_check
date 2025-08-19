@@ -2,8 +2,7 @@
     @php
         $url = route('bills.certificate', [
             'phone' => auth()->user()->phone,
-            'billId' => $row->id,
-            'clientId' => $row->user_id,
+            'slug' => $row->slug,
         ]);
     @endphp
     <a class="btn btn-info btn-sm" href="{{ $url }}" target="_blank">

@@ -11,6 +11,7 @@ use App\Traits\QueryBuilder;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Storage;
+use Illuminate\Support\Str;
 use Symfony\Component\HttpFoundation\Response;
 
 class BillController extends Controller
@@ -70,6 +71,8 @@ class BillController extends Controller
                 $credentials['other_information'] = $tags;
             }
 
+            $credentials['slug'] = Str::slug($credentials['name']);
+
             $credentials['user_id'] = Auth::id();
 
             $bill = Bill::create($credentials);
@@ -124,6 +127,8 @@ class BillController extends Controller
                 $credentials['other_information'] = $tags;
             }
 
+            $credentials['slug'] = Str::slug($credentials['name']);
+
             $bill->update($credentials);
 
             // === Xử lý files ===
@@ -161,15 +166,14 @@ class BillController extends Controller
     }
 
 
-    public function certificate($company, Request $request)
+    public function certificate($phone, $slug, Request $request)
     {
-        $userId = $request->input('clientId');
-        $billId = $request->input('billId');
+
         $phone = $request->segment(1);
 
-        $bill = Bill::query()->where(['user_id' => $userId, 'id' => $billId])->with(['files'])->firstOrFail();
+        $user = User::query()->where('phone', $phone)->firstOrFail();
 
-        $user = User::query()->findOrFail($userId);
+        $bill = Bill::query()->where(['slug' => $slug, 'user_id' => $user->id])->with(['files'])->firstOrFail();
 
         if ($phone !== $user->phone) abort(404);
 
