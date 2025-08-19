@@ -16,6 +16,7 @@ trait QueryBuilder
         array $order = [],
         string $dateColumn = 'created_at',
         array $conditions = [],
+        bool  $whereDate = false,
         bool  $all = false
     ) {
         $conditions = $conditions ?: request()->all();
@@ -59,7 +60,7 @@ trait QueryBuilder
         }
 
         // Date range
-        if (!empty($conditions['start_date']) && !empty($conditions['end_date'])) {
+        if (!empty($conditions['start_date']) && !empty($conditions['end_date']) && $whereDate) {
             $query->whereBetween($dateColumn, [
                 $conditions['start_date'],
                 $conditions['end_date'] . ' 23:59:59',

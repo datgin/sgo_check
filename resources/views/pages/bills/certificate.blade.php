@@ -3,14 +3,14 @@
 
 <head>
     <meta charset="UTF-8">
-    <title>{{ $decoded['company'] }}</title>
+    <title>{{ $user->company }}</title>
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet">
     <!-- FontAwesome -->
     <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.2/css/all.min.css" rel="stylesheet">
 
-    <link rel="shortcut icon" href="{{ $decoded['favicon'] }}">
-    <link rel="icon" href="{{ $decoded['favicon'] }}">
+    <link rel="shortcut icon" href="{{ $user->favicon }}">
+    <link rel="icon" href="{{ $user->favicon }}">
 
 
     <style>
@@ -118,15 +118,14 @@
         <div class="mb-4">
             <div class="row align-items-center g-3">
                 <div class="col-12 col-md-4 text-center">
-                    <img src="{{ $decoded['logo'] }}" alt="Logo doanh nghiệp" class="img-fluid"
-                        style="max-height:120px">
+                    <img src="{{ $user->logo }}" alt="Logo doanh nghiệp" class="img-fluid" style="max-height:120px">
                 </div>
                 <div class="col-12 col-md-8 text-center text-md-start">
-                    <h5 class="mb-1">{{ $decoded['company'] }}</h5>
-                    <p class="mb-1">{{ $decoded['address'] }}</p>
-                    <p class="mb-1">Mã số thuế: {{ $decoded['tax_number'] }}</p>
-                    <p class="mb-1">Điện thoại: {{ $decoded['phone'] }}</p>
-                    <p class="mb-0">Email: {{ $decoded['email'] }}</p>
+                    <h5 class="mb-1">{{ $user->company }}</h5>
+                    <p class="mb-1">{{ $user->address }}</p>
+                    <p class="mb-1">Mã số thuế: {{ $user->tax_number }}</p>
+                    <p class="mb-1">Điện thoại: {{ $user->phone }}</p>
+                    <p class="mb-0">Email: {{ $user->email }}</p>
                 </div>
             </div>
         </div>
@@ -207,14 +206,13 @@
         <!-- Contact -->
         <div class="text-center mt-4">
             <p><strong>Liên hệ</strong></p>
-            <p>Hotline: {{ $decoded['phone'] }} | Email: {{ $decoded['email'] }}</p>
+            <p>Hotline: {{ $user->phone }} | Email: {{ $user->email }}</p>
             <div class="contact-buttons d-grid gap-2 d-sm-flex justify-content-sm-center">
-                <a href="tel:{{ $decoded['phone'] }}" class="btn btn-call text-light"><i class="fas fa-phone"></i> Gọi
+                <a href="tel:{{ $user->phone }}" class="btn btn-call text-light"><i class="fas fa-phone"></i> Gọi
                     ngay</a>
-                <a href="mailto:{{ $decoded['email'] }}" class="btn btn-email text-light"><i
-                        class="fas fa-envelope"></i>
+                <a href="mailto:{{ $user->email }}" class="btn btn-email text-light"><i class="fas fa-envelope"></i>
                     Email</a>
-                <a href="{{ $decoded['website'] }}" class="btn btn-website text-dark"><i class="fas fa-globe"></i>
+                <a href="{{ $user->website }}" class="btn btn-website text-dark"><i class="fas fa-globe"></i>
                     Website</a>
             </div>
         </div>

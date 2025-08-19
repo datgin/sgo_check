@@ -161,31 +161,18 @@ class BillController extends Controller
     }
 
 
-    public function certificate($company, Bill $bill, Request $request)
+    public function certificate($company, Request $request)
     {
-        $token = $request->query('token');
+        $userId = $request->input('clientId');
+        $billId = $request->input('billId');
+        $phone = $request->segment(1);
 
-        if (!$token) {
-            abort(403, 'Token không hợp lệ');
-        }
+        $bill = Bill::query()->where(['user_id' => $userId, 'id' => $billId])->with(['files'])->firstOrFail();
 
-        // Giải mã
-        $decoded = json_decode(base64_decode($token), true);
+        $user = User::query()->findOrFail($userId);
 
-        // dd($decoded['company']);
+        if ($phone !== $user->phone) abort(404);
 
-        if (!$decoded) {
-            abort(403, 'Token sai định dạng');
-        }
-
-        $bill->load(['files']);
-
-        // Nếu bạn muốn lấy user trong DB dựa theo id
-        $user = null;
-        if (isset($decoded['id'])) {
-            $user = User::find($decoded['id']);
-        }
-
-        return view('pages.bills.certificate', compact('bill', 'user', 'decoded'));
+        return view('pages.bills.certificate', compact('bill', 'user'));
     }
 }

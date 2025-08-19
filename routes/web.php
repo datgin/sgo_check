@@ -78,5 +78,5 @@ Route::middleware(['auth'])->group(function () {
 });
 
 
-Route::get('{phone}/certificate/{bill}', [BillController::class, 'certificate'])
-    ->name('bills.certificate')->middleware(['check.phone']);
+Route::get('{phone}/certificate', [BillController::class, 'certificate'])
+    ->name('bills.certificate');

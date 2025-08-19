@@ -1,11 +1,9 @@
 @if (Str::contains(request()->path(), 'bills'))
     @php
-        // Tạo token encode user ở đây hoặc controller truyền xuống
-        $token = base64_encode(json_encode(auth()->user()));
         $url = route('bills.certificate', [
             'phone' => auth()->user()->phone,
-            'bill' => $row->id,
-            'token' => $token,
+            'billId' => $row->id,
+            'clientId' => $row->user_id,
         ]);
     @endphp
     <a class="btn btn-info btn-sm" href="{{ $url }}" target="_blank">
