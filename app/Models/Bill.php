@@ -12,6 +12,7 @@ class Bill extends Model
     protected $fillable = [
         'user_id',
         'name',
+        'slug',
         'origin',
         'product_code',
         'production_date',
